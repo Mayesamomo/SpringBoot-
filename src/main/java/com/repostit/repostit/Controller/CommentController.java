@@ -8,27 +8,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/comments/")
 @AllArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping
-    public List<CommentDto> getAllCommentsForPost(@PathVariable Long postId) {
-        return commentService.getCommentByPost(postId);
+    @PostMapping
+    public ResponseEntity<Void> createComment(@RequestBody CommentDto commentsDto) {
+        commentService.save(commentsDto);
+        return new ResponseEntity<>(CREATED);
     }
 
-    @GetMapping("/query/user/{userName}")
-    public List<CommentDto> getAllCommentsByUser(@PathVariable String username) {
-        return commentService.getCommentsByUser(username);
+    @GetMapping("/by-post/{postId}")
+    public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId) {
+        return ResponseEntity.status(OK)
+                .body(commentService.getAllCommentsForPost(postId));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity createComment(@RequestBody CommentDto commentDto) {
-        commentService.createComment(commentDto);
-        return new ResponseEntity(OK);
+    @GetMapping("/by-user/{userName}")
+    public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String userName){
+        return ResponseEntity.status(OK)
+                .body(commentService.getAllCommentsForUser(userName));
     }
+
 }

@@ -2,12 +2,14 @@ package com.repostit.repostit.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    private String fullname;
+public class RefreshTokenRequest {
+    @NotBlank
+    private String refreshToken;
     private String username;
-    private String email;
-    private String password;
 }
